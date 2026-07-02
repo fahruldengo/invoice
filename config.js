@@ -6,7 +6,7 @@
    ========================================================= */
 window.LEDGERINE_CONFIG = {
   // Tempel URL Web App di sini, contoh:
-  // API_URL: "https://script.google.com/macros/s/AKfycbx....../exec",
+  // API_URL: "https://script.google.com/macros/s/AKfycbx4XbQvqoVqLzlxKUYQZ865GfODLVNIkRdjhqM2AaQYRGdiSo-0M1sjES2OUS1pGLZLSw/exec",
   API_URL: "",
 
   COMPANY: {
