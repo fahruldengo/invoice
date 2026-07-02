@@ -179,42 +179,88 @@ td .muted{color:#9a9384;font-size:12.5px}
 .spin{width:38px;height:38px;border:3px solid var(--gold-soft);border-top-color:var(--gold);border-radius:50%;animation:sp .7s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 
-/* print document (invoice/receipt) */
-.doc{background:#fff;color:#1a1a1a;font-family:'Inter';padding:44px 46px;width:100%}
-.doc-top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid var(--ink);padding-bottom:22px;margin-bottom:26px}
-.doc-brand{display:flex;align-items:center;gap:11px}
-.doc-brand .m{width:44px;height:44px;border-radius:11px;background:var(--ink);color:var(--gold);display:grid;place-items:center;font-family:'Fraunces';font-weight:700;font-size:23px}
-.doc-brand .t{font-family:'Fraunces';font-size:23px;font-weight:600}
-.doc-brand .s{font-size:12px;color:#777}
-.doc-title{text-align:right}
-.doc-title h2{font-family:'Fraunces';font-size:32px;color:var(--ink);letter-spacing:.02em}
-.doc-title .no{font-family:'JetBrains Mono';font-size:13px;color:#666;margin-top:3px}
-.doc-meta{display:flex;justify-content:space-between;margin-bottom:26px;gap:30px}
-.doc-meta .blk{font-size:13.5px;line-height:1.7}
-.doc-meta .blk .lb{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:#999;font-weight:700;margin-bottom:5px}
-.doc-meta .blk .nm{font-weight:600;font-size:15px}
-.doc table{margin-bottom:20px}
-.doc th{background:var(--ink);color:#fff;padding:11px 14px;font-size:11px}
-.doc td{padding:11px 14px;border-bottom:1px solid #eee;font-size:13.5px}
-.doc-sum{display:flex;justify-content:flex-end}
-.doc-sum .box{width:290px}
-.doc-sum .r{display:flex;justify-content:space-between;padding:7px 0;font-size:14px}
-.doc-sum .r.grand{border-top:2px solid var(--ink);margin-top:6px;padding-top:12px;font-family:'Fraunces';font-size:20px;font-weight:600;color:var(--ink)}
-.doc-note{margin-top:30px;padding-top:18px;border-top:1px solid #eee;font-size:12.5px;color:#777;line-height:1.6}
-.terbilang{background:var(--paper);border-left:3px solid var(--gold);padding:12px 16px;border-radius:0 8px 8px 0;font-style:italic;font-size:14px;margin:20px 0;color:var(--ink)}
-.doc-sign{display:flex;justify-content:flex-end;margin-top:44px}
-.doc-sign .s{text-align:center;font-size:13.5px}
-.doc-sign .line{margin-top:60px;border-top:1px solid #333;padding-top:6px;min-width:180px;font-weight:600}
-.rcpt-inv-list{margin:16px 0}
-.rcpt-inv-list .h{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#999;font-weight:700;margin-bottom:8px}
-.rcpt-inv-list .it{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:13.5px}
+/* ===== DOKUMEN CETAK — gaya CV Vidya Amaliah ===== */
+.doc{background:#fff;color:#111;font-family:Arial,Helvetica,sans-serif;padding:38px 40px;width:800px;margin:0 auto;font-size:13px;line-height:1.4}
+.va-logo{display:flex;align-items:center;gap:9px}
+.va-logo .mark{width:34px;height:34px;flex:none}
+.va-logo .txt{font-weight:700;font-size:22px;color:#c0392b;letter-spacing:.3px}
+
+/* ---- INVOICE ---- */
+.inv-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.inv-company{max-width:470px}
+.inv-company .cname{font-size:19px;font-weight:700;margin:10px 0 6px}
+.inv-company .cline{font-size:11.5px;color:#222;line-height:1.5}
+.inv-fak{margin-top:44px;font-size:12.5px}
+.inv-fak table{border-collapse:collapse}
+.inv-fak td{padding:2px 6px;vertical-align:top}
+.inv-fak td.lb{font-weight:700}
+.sep-line{height:2px;background:#111;margin:6px 0 18px;border:none}
+.thin-line{border:none;border-top:1px solid #111;width:230px;margin:26px 0 0}
+
+.inv-parties{display:flex;gap:16px;margin:16px 0 10px}
+.inv-box{border:1px solid #111;padding:9px 11px;font-size:12px;line-height:1.5}
+.inv-box.cust{flex:1.6}
+.inv-box.period{flex:1;display:flex;align-items:flex-start}
+.inv-box .sect{font-weight:700;font-size:12px;margin-bottom:6px;letter-spacing:.02em}
+.inv-box .krow{display:flex}
+.inv-box .krow .k{width:66px;flex:none}
+.inv-box .krow .v{flex:1}
+.pelanggan-lb{font-weight:700;font-size:12px;margin:12px 0 4px}
+
+.inv-table{width:100%;border-collapse:collapse;margin:4px 0 0;font-size:12px}
+.inv-table th{border:1px solid #111;padding:7px 8px;font-weight:700;text-align:center;background:#fff;color:#111;font-size:11.5px}
+.inv-table td{border:1px solid #111;padding:8px;vertical-align:top}
+.inv-table td.c{text-align:center}
+.inv-table td.r{text-align:right}
+
+.inv-sum{display:flex;justify-content:flex-end;margin-top:18px}
+.inv-sum table{border-collapse:collapse;min-width:360px;font-size:12.5px}
+.inv-sum td{padding:5px 4px}
+.inv-sum td.r{text-align:right}
+.inv-sum tr.line td{border-bottom:1px solid #111}
+.inv-sum tr.total td{font-weight:700;border-top:1px solid #111}
+.inv-sum tr.sisa td{font-weight:700}
+
+.inv-pay-lb{font-weight:700;font-size:12px;margin:26px 0 6px}
+.inv-bank{border:1px solid #111;font-size:12px;max-width:360px}
+.inv-bank .brow{display:flex;padding:4px 9px}
+.inv-bank .brow .k{width:135px;flex:none}
+.inv-terbilang{border:1px solid #111;border-top:none;padding:5px 9px;font-size:12px;max-width:360px}
+.inv-terbilang .h{font-weight:400}
+.inv-sign{float:right;text-align:center;margin-top:18px;font-size:12.5px}
+.inv-sign .nm{font-weight:700;border-top:1px solid #111;padding-top:3px;min-width:190px}
+
+/* ---- KWITANSI ---- */
+.kw-head{display:flex;justify-content:flex-end;margin-bottom:2px}
+.kw-logo{text-align:right}
+.kw-logo .row1{display:flex;align-items:center;gap:9px;justify-content:flex-end}
+.kw-logo .txt{font-weight:700;font-size:26px;color:#c0392b}
+.kw-logo .tag{font-weight:700;font-size:13px;color:#111;margin-top:2px}
+.kw-rule{border:none;border-top:2px solid #d98880;margin:3px 0}
+.kw-rule.b{border-top:2px solid #d98880;margin-top:2px}
+.kw-title{text-align:center;font-weight:700;font-size:20px;letter-spacing:.5px;margin:20px 0 22px}
+.kw-meta{font-size:14px;line-height:1.1;margin-left:6px}
+.kw-meta .row{display:flex;margin-bottom:13px}
+.kw-meta .row .k{width:150px;flex:none}
+.kw-meta .row .c{width:12px;flex:none}
+.kw-meta .row .v{flex:1}
+.kw-detail{margin:4px 0 4px 176px}
+.kw-detail table{border-collapse:collapse;width:100%;font-size:13.5px}
+.kw-detail td{padding:5px 4px;border-bottom:1px solid #333}
+.kw-detail td.no{width:26px}
+.kw-detail td.amt{text-align:right;white-space:nowrap;width:130px}
+.kw-foot{display:flex;justify-content:space-between;align-items:flex-start;margin-top:34px}
+.kw-amount{border:1.5px solid #111;padding:11px 20px;font-size:17px;font-weight:600;border-radius:3px}
+.kw-place{text-align:left;font-size:14px;padding-top:12px}
+.kw-sign{text-align:center;font-size:14px;margin-top:52px;float:right}
+.kw-sign .nm{font-weight:700}
 
 @media print{
   body *{visibility:hidden}
   #printArea,#printArea *{visibility:visible}
   #printArea{position:absolute;inset:0;padding:0}
-  .doc{box-shadow:none;padding:20px}
-  @page{margin:14mm}
+  .doc{box-shadow:none;width:100%;padding:6mm}
+  @page{size:A4;margin:12mm}
 }
 
 @media(max-width:860px){
@@ -300,7 +346,11 @@ td .muted{color:#9a9384;font-size:12.5px}
    ========================================================= */
 const API_URL = (window.LEDGERINE_CONFIG && window.LEDGERINE_CONFIG.API_URL) || "";
 const COMPANY = (window.LEDGERINE_CONFIG && window.LEDGERINE_CONFIG.COMPANY) || {
-  name:"CV Vidya Amaliah", addr:"Manado, Sulawesi Utara", phone:"0812-xxxx-xxxx", email:"info@vidyaamaliah.co.id"
+  name:"CV. VIDYA AMALIAH", tagline:"Strategic Business Partner Telkomsel",
+  address:"Jl. Nani Wartabone Ruko Bonanza No.2, Kota Gorontalo", phone:"0811435431",
+  email:"cvvidyaamaliah@gmail.com", npwp:"934538901822000", city:"Gorontalo",
+  bank:{name:"PT Bank Mandiri Tbk.",branch:"Gorontalo",account:"150 00 5551333 5",holder:"CV Vidya Amaliah"},
+  signer:"Farin Pohantalo", title:"General Manager"
 };
 /* Login: kredensial diverifikasi di backend Apps Script.
    Default fallback (jika belum set di backend): admin / admin123 */
@@ -312,6 +362,8 @@ let SESSION = null;
 /* ---------- utils ---------- */
 const $ = s => document.querySelector(s);
 const rp = n => "Rp " + (Number(n)||0).toLocaleString("id-ID");
+const num2 = n => (Number(n)||0).toLocaleString("id-ID",{minimumFractionDigits:2,maximumFractionDigits:2}); // 22.700.000,00
+const num0 = n => (Number(n)||0).toLocaleString("id-ID"); // 547.420.000
 const esc = s => (s==null?"":String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
 const todayStr = () => new Date().toISOString().slice(0,10);
@@ -563,12 +615,12 @@ function renderInvoices(){
           </select>
           <div class="search">${searchIcon()}<input placeholder="Cari invoice..." value="${esc(invSearch)}" oninput="invSearch=this.value;renderInvoices()"></div>
         </div></div>
-      ${list.length? `<table><thead><tr><th>No. Invoice</th><th>Pelanggan</th><th>Tanggal</th><th>Jatuh Tempo</th><th class="num">Total</th><th>Status</th><th></th></tr></thead>
+      ${list.length? `<table><thead><tr><th>No. Faktur</th><th>Pelanggan</th><th>Tanggal</th><th>Periode</th><th class="num">Total</th><th>Status</th><th></th></tr></thead>
         <tbody>${list.map(i=>`<tr>
           <td class="mono name">${esc(i.number)}</td>
           <td class="name">${esc(custName(i.customerId))}</td>
           <td>${fmtDate(i.date)}</td>
-          <td>${fmtDate(i.due)}</td>
+          <td>${esc(i.period||"—")}</td>
           <td class="num">${rp(i.total)}</td>
           <td>${statusBadge(i.status)}</td>
           <td><div class="row-actions">
@@ -584,35 +636,44 @@ function openInvoiceModal(inv){
   if(!DB.customers.length){ toast("Tambahkan pelanggan dulu",true); go("customers"); return; }
   if(!DB.products.length){ toast("Tambahkan barang dulu",true); go("products"); return; }
   const isEdit=!!inv;
-  inv=inv||{id:uid("inv-"),number:nextInvoiceNo(),customerId:DB.customers[0].id,date:todayStr(),due:"",
-    items:[{productId:"",qty:1,price:0}],taxPct:0,notes:"",status:"unpaid"};
+  inv=inv||{id:uid("inv-"),number:nextInvoiceNo(),customerId:DB.customers[0].id,date:todayStr(),due:"",period:"",
+    items:[{productId:"",qty:1,price:0}],taxMode:"exclusive",ppnPct:11,pphPct:0.5,notes:"",status:"unpaid"};
   IEDIT=JSON.parse(JSON.stringify(inv));
   showModal(`
     <div class="modal-head"><h3>${isEdit?"Edit":"Buat"} Invoice</h3><button class="x" onclick="closeModal()">×</button></div>
     <div class="modal-body">
       <div class="grid2">
-        <div class="form-field"><label>No. Invoice</label><input id="i_number" value="${esc(inv.number)}"></div>
+        <div class="form-field"><label>No. Faktur</label><input id="i_number" value="${esc(inv.number)}"></div>
         <div class="form-field"><label>Pelanggan *</label><select id="i_customer">
           ${DB.customers.map(c=>`<option value="${c.id}"${c.id===inv.customerId?" selected":""}>${esc(c.name)}${c.company?" — "+esc(c.company):""}</option>`).join("")}
         </select></div>
       </div>
       <div class="grid2">
-        <div class="form-field"><label>Tanggal invoice</label><input id="i_date" type="date" value="${inv.date}"></div>
-        <div class="form-field"><label>Jatuh tempo</label><input id="i_due" type="date" value="${inv.due||""}"></div>
+        <div class="form-field"><label>Tanggal faktur</label><input id="i_date" type="date" value="${inv.date}"></div>
+        <div class="form-field"><label>Periode</label><input id="i_period" value="${esc(inv.period||"")}" placeholder="mis. JUNI 2026"></div>
       </div>
       <div class="form-field"><label>Item barang</label>
         <div class="li-head"><span>Barang</span><span>Qty</span><span>Harga</span><span class="li-sub">Subtotal</span><span></span></div>
         <div id="i_items"></div>
         <button class="btn ghost sm" style="margin-top:8px" onclick="addLine()">${plusIcon()} Tambah baris</button>
       </div>
-      <div class="grid2">
-        <div class="form-field"><label>Pajak / PPN (%)</label><input id="i_tax" type="number" min="0" step="0.1" value="${inv.taxPct||0}" oninput="calcTotals()"></div>
-        <div class="form-field"><label>Catatan</label><input id="i_notes" value="${esc(inv.notes)}"></div>
+      <div class="form-field"><label>Skema pajak</label>
+        <select id="i_taxmode" onchange="IEDIT.taxMode=this.value;calcTotals()">
+          <option value="exclusive"${(inv.taxMode||"exclusive")==="exclusive"?" selected":""}>Pajak ditambahkan ke total (eksklusif)</option>
+          <option value="inclusive"${inv.taxMode==="inclusive"?" selected":""}>Pajak sudah termasuk dalam total (inklusif — gaya Telkomsel)</option>
+          <option value="none"${inv.taxMode==="none"?" selected":""}>Tanpa pajak</option>
+        </select>
       </div>
+      <div class="grid2">
+        <div class="form-field"><label>PPN (%)</label><input id="i_ppn" type="number" min="0" step="0.01" value="${inv.ppnPct!=null?inv.ppnPct:11}" oninput="calcTotals()"></div>
+        <div class="form-field"><label>PPh (%)</label><input id="i_pph" type="number" min="0" step="0.01" value="${inv.pphPct!=null?inv.pphPct:0.5}" oninput="calcTotals()"></div>
+      </div>
+      <div class="form-field"><label>Detail bank (opsional, tampil di faktur)</label><input id="i_notes" value="${esc(inv.notes)}" placeholder="Kosongkan untuk pakai bank default"></div>
       <div class="li-total">
         <div class="r"><span>Subtotal</span><span class="mono" id="t_sub">Rp 0</span></div>
-        <div class="r"><span>Pajak</span><span class="mono" id="t_tax">Rp 0</span></div>
-        <div class="r grand"><span>Total Tagihan</span><span class="mono" id="t_grand">Rp 0</span></div>
+        <div class="r"><span id="t_ppn_lb">termasuk PPN</span><span class="mono" id="t_ppn">Rp 0</span></div>
+        <div class="r"><span id="t_pph_lb">Termasuk PPh</span><span class="mono" id="t_pph">Rp 0</span></div>
+        <div class="r grand"><span>TOTAL</span><span class="mono" id="t_grand">Rp 0</span></div>
       </div>
     </div>
     <div class="modal-foot">
@@ -648,10 +709,32 @@ function onProductPick(idx,pid){
 function addLine(){ IEDIT.items.push({productId:"",qty:1,price:0}); renderLines(); }
 function delLine(i){ IEDIT.items.splice(i,1); if(!IEDIT.items.length)IEDIT.items.push({productId:"",qty:1,price:0}); renderLines(); }
 function calcTotals(){
-  let sub=0;
-  IEDIT.items.forEach((it,idx)=>{ const s=(it.qty||0)*(it.price||0); sub+=s; const el=$("#sub_"+idx); if(el)el.textContent=rp(s); });
-  const tax=sub*(Number($("#i_tax").value)||0)/100;
-  $("#t_sub").textContent=rp(sub); $("#t_tax").textContent=rp(tax); $("#t_grand").textContent=rp(sub+tax);
+  let base=0;
+  IEDIT.items.forEach((it,idx)=>{ const s=(it.qty||0)*(it.price||0); base+=s; const el=$("#sub_"+idx); if(el)el.textContent=rp(s); });
+  const t=computeTax(base, $("#i_taxmode").value, Number($("#i_ppn").value)||0, Number($("#i_pph").value)||0);
+  $("#t_sub").textContent=rp(t.subtotal);
+  $("#t_ppn").textContent=rp(t.ppn);
+  $("#t_pph").textContent=rp(t.pph);
+  $("#t_grand").textContent=rp(t.total);
+  const mode=$("#i_taxmode").value;
+  $("#t_ppn_lb").textContent = mode==="inclusive"?"termasuk PPN":"PPN";
+  $("#t_pph_lb").textContent = mode==="inclusive"?"Termasuk PPh":"PPh (potong)";
+}
+/* base = jumlah baris item.
+   exclusive : total = base + PPN - PPh, subtotal = base
+   inclusive : total = base (harga sudah termasuk pajak); subtotal & pajak dihitung mundur
+   none      : tanpa pajak */
+function computeTax(base, mode, ppnPct, pphPct){
+  if(mode==="none") return {subtotal:base, ppn:0, pph:0, total:base};
+  if(mode==="inclusive"){
+    // total dianggap = base; pecah mundur: subtotal * (1 + ppn - pph) = total
+    const factor = 1 + ppnPct/100 - pphPct/100;
+    const subtotal = factor? base/factor : base;
+    return {subtotal, ppn:subtotal*ppnPct/100, pph:subtotal*pphPct/100, total:base};
+  }
+  // exclusive
+  const ppn=base*ppnPct/100, pph=base*pphPct/100;
+  return {subtotal:base, ppn, pph, total:base+ppn-pph};
 }
 async function saveInvoice(){
   const cust=$("#i_customer").value;
@@ -660,19 +743,22 @@ async function saveInvoice(){
     return {productId:it.productId,name:p?p.name:"",unit:p?p.unit:"",qty:it.qty,price:it.price,subtotal:it.qty*it.price};
   });
   if(!items.length){ toast("Tambahkan minimal 1 barang",true); return; }
-  const sub=items.reduce((s,i)=>s+i.subtotal,0);
-  const taxPct=Number($("#i_tax").value)||0;
-  const tax=sub*taxPct/100;
+  const base=items.reduce((s,i)=>s+i.subtotal,0);
+  const taxMode=$("#i_taxmode").value;
+  const ppnPct=Number($("#i_ppn").value)||0, pphPct=Number($("#i_pph").value)||0;
+  const t=computeTax(base,taxMode,ppnPct,pphPct);
   const inv={id:IEDIT.id,number:$("#i_number").value.trim(),customerId:cust,
-    date:$("#i_date").value,due:$("#i_due").value,items,taxPct,tax,subtotal:sub,total:sub+tax,
+    date:$("#i_date").value,period:$("#i_period").value.trim(),items,
+    taxMode,ppnPct,pphPct,subtotal:t.subtotal,ppn:t.ppn,pph:t.pph,total:t.total,
     notes:$("#i_notes").value.trim(),status:IEDIT.status||"unpaid",paidAt:IEDIT.paidAt||""};
   await api("saveInvoice",inv); localFallback("saveInvoice",inv);
   closeModal(); toast("Invoice tersimpan"); renderInvoices();
 }
 function nextInvoiceNo(){
-  const y=new Date().getFullYear(),m=String(new Date().getMonth()+1).padStart(2,"0");
-  const seq=DB.invoices.length+1;
-  return `INV/${y}/${m}/${String(seq).padStart(4,"0")}`;
+  // ambil nomor tertinggi yang berupa angka, mulai dari 15504
+  let max=15503;
+  DB.invoices.forEach(i=>{ const n=parseInt(String(i.number).replace(/\D/g,""),10); if(!isNaN(n)&&n>max)max=n; });
+  return String(max+1);
 }
 
 /* ================= RECEIPTS (KWITANSI) ================= */
@@ -706,7 +792,7 @@ function renderReceipts(){
 function openReceiptModal(){
   const unpaid=DB.invoices.filter(i=>i.status!=="paid");
   if(!unpaid.length){ toast("Tidak ada invoice yang belum dibayar",true); return; }
-  RSEL={};
+  RSEL={}; RLINES=[];
   showModal(`
     <div class="modal-head"><h3>Terbitkan Kwitansi</h3><button class="x" onclick="closeModal()">×</button></div>
     <div class="modal-body">
@@ -729,7 +815,14 @@ function openReceiptModal(){
         <div class="form-field"><label>Metode pembayaran</label>
           <select id="r_method"><option>Tunai</option><option>Transfer Bank</option><option>QRIS</option><option>Cek / Giro</option></select></div>
       </div>
-      <div class="form-field"><label>Untuk pembayaran</label><input id="r_for" placeholder="mis. Pelunasan tagihan bulan ini"></div>
+      <div class="form-field"><label>Untuk pembayaran</label><input id="r_for" placeholder="mis. Transaksi AD Online Periode Desember 2023"></div>
+      <div class="form-field"><label>Rincian pembayaran <span style="font-weight:400;text-transform:none;color:#9a9384">(opsional — muncul sebagai daftar bernomor di kwitansi)</span></label>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <button class="btn ghost sm" onclick="fillLinesFromInvoices()">Isi dari invoice terpilih</button>
+          <button class="btn ghost sm" onclick="addRcptLine()">${plusIcon()} Tambah baris rincian</button>
+        </div>
+        <div id="r_lines"></div>
+      </div>
       <div class="li-total">
         <div class="r grand"><span>Total Diterima</span><span class="mono" id="r_total">Rp 0</span></div>
       </div>
@@ -739,7 +832,7 @@ function openReceiptModal(){
       <button class="btn gold" onclick="saveReceipt()">Terbitkan & Tandai Lunas</button>
     </div>`);
 }
-let RSEL={};
+let RSEL={}, RLINES=[];
 function onRcptPick(){
   RSEL={}; let total=0, firstCust=null;
   document.querySelectorAll("#r_invlist input:checked").forEach(cb=>{
@@ -750,6 +843,26 @@ function onRcptPick(){
   $("#r_total").textContent=rp(total);
   if(firstCust&&!$("#r_payer").value){ $("#r_payer").value=custName(firstCust); }
 }
+function renderRcptLines(){
+  const box=$("#r_lines"); if(!box)return; box.innerHTML="";
+  RLINES.forEach((l,idx)=>{
+    const row=document.createElement("div");
+    row.style.cssText="display:grid;grid-template-columns:1fr 140px 34px;gap:8px;margin-bottom:7px";
+    row.innerHTML=`
+      <input placeholder="Deskripsi rincian" value="${esc(l.desc)}" oninput="RLINES[${idx}].desc=this.value">
+      <input type="number" min="0" placeholder="Nominal" value="${l.amount||0}" oninput="RLINES[${idx}].amount=Number(this.value)||0"
+        style="text-align:right">
+      <button class="li-del" onclick="RLINES.splice(${idx},1);renderRcptLines()">${trashIcon()}</button>`;
+    box.appendChild(row);
+  });
+}
+function addRcptLine(){ RLINES.push({desc:"",amount:0}); renderRcptLines(); }
+function fillLinesFromInvoices(){
+  RLINES = Object.keys(RSEL).map(iid=>{ const inv=DB.invoices.find(x=>x.id===iid);
+    return {desc: inv?("Invoice "+inv.number+(inv.period?" — "+inv.period:"")):"", amount: inv?inv.total:0}; });
+  if(!RLINES.length){ toast("Centang invoice dulu",true); return; }
+  renderRcptLines();
+}
 async function saveReceipt(){
   const ids=Object.keys(RSEL);
   if(!ids.length){ toast("Pilih minimal 1 invoice",true); return; }
@@ -757,70 +870,153 @@ async function saveReceipt(){
   const firstInv=DB.invoices.find(x=>x.id===ids[0]);
   const r={id:uid("rcpt-"),number:$("#r_number").value.trim(),date:$("#r_date").value,
     payer:$("#r_payer").value.trim(),method:$("#r_method").value,forWhat:$("#r_for").value.trim(),
-    amount,invoiceIds:ids,customerId:firstInv?firstInv.customerId:""};
+    amount,invoiceIds:ids,lines:RLINES.filter(l=>l.desc||l.amount),customerId:firstInv?firstInv.customerId:""};
   await api("saveReceipt",r); localFallback("saveReceipt",r);
   closeModal(); toast("Kwitansi diterbitkan · invoice ditandai lunas"); go("receipts");
 }
 function nextReceiptNo(){
-  const y=new Date().getFullYear();
+  const rom=["","I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII"];
+  const now=new Date();
   const seq=DB.receipts.length+1;
-  return `KW/${y}/${String(seq).padStart(4,"0")}`;
+  const yy=String(now.getFullYear()).slice(-2);
+  return `${seq}/GM-01/VA-GTO/${rom[now.getMonth()+1]}/${yy}`;
 }
 
-/* ================= PRINT: INVOICE ================= */
+/* logo berlian merah Vidya Amaliah (SVG inline) */
+function vaMark(size){
+  size=size||34;
+  return `<svg class="mark" width="${size}" height="${size}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <path d="M50 6 L92 40 L50 94 L8 40 Z" fill="#c0392b"/>
+    <path d="M50 26 L70 42 L50 74 L38 42 Z" fill="#fff"/>
+    <path d="M50 26 L70 42 L50 50 Z" fill="#e8a9a2"/>
+  </svg>`;
+}
+function fmtDMY(d){ if(!d)return "-"; const x=new Date(d); const p=n=>String(n).padStart(2,"0"); return `${p(x.getDate())}-${p(x.getMonth()+1)}-${x.getFullYear()}`; }
+function longDate(d){ return fmtDate(d); }
+
+/* ================= PRINT: INVOICE (gaya Vidya Amaliah) ================= */
 function printInvoice(id){
   const inv=DB.invoices.find(x=>x.id===id); if(!inv)return;
   const c=DB.customers.find(x=>x.id===inv.customerId)||{};
+  const B=COMPANY.bank||{};
   const rows=inv.items.map((it,n)=>`<tr>
-    <td>${n+1}</td><td>${esc(it.name)}</td><td style="text-align:center">${it.qty} ${esc(it.unit||"")}</td>
-    <td class="num">${rp(it.price)}</td><td class="num">${rp(it.subtotal)}</td></tr>`).join("");
+    <td class="c" style="width:32px">${n+1}</td>
+    <td>${esc(it.name)}</td>
+    <td class="c" style="width:60px">${it.qty}</td>
+    <td class="r" style="width:130px">${num2(it.price)}</td>
+    <td class="r" style="width:150px">${num2(it.subtotal)}</td></tr>`).join("");
+  const custName2=c.name||"";
+  const custAddr=c.address||"";
   $("#printArea").innerHTML=`<div class="doc">
-    ${docHeader("Invoice",inv.number)}
-    <div class="doc-meta">
-      <div class="blk"><div class="lb">Ditagihkan kepada</div>
-        <div class="nm">${esc(c.name||"")}</div>${c.company?esc(c.company)+"<br>":""}${esc(c.address||"")}<br>${esc(c.phone||"")}</div>
-      <div class="blk" style="text-align:right"><div class="lb">Detail</div>
-        Tanggal: ${fmtDate(inv.date)}<br>Jatuh tempo: ${fmtDate(inv.due)}<br>Status: ${inv.status==="paid"?"LUNAS":"BELUM DIBAYAR"}</div>
+    <div class="inv-head">
+      <div class="inv-company">
+        <div class="va-logo">${vaMark(30)}<span class="txt" style="font-size:18px">${esc(COMPANY.name.replace(/^CV\.?\s*/i,"").replace(/VIDYA AMALIAH/i,"Vidya Amaliah"))}</span></div>
+        <div class="cname">${esc(COMPANY.name)}</div>
+        <div class="cline">${esc(COMPANY.address)}</div>
+        <div class="cline">Telp: ${esc(COMPANY.phone)}</div>
+        <div class="cline">Email: ${esc(COMPANY.email)}</div>
+        <div class="cline">${esc(COMPANY.npwp||"")}</div>
+      </div>
+      <div class="inv-fak">
+        <table>
+          <tr><td class="lb">FAKTUR #</td><td>${esc(inv.number)}</td></tr>
+          <tr><td class="lb">TANGGAL</td><td>: ${fmtDMY(inv.date)}</td></tr>
+        </table>
+      </div>
     </div>
-    <table><thead><tr><th>#</th><th>Deskripsi</th><th style="text-align:center">Qty</th><th class="num">Harga</th><th class="num">Jumlah</th></tr></thead>
-      <tbody>${rows}</tbody></table>
-    <div class="doc-sum"><div class="box">
-      <div class="r"><span>Subtotal</span><span class="mono">${rp(inv.subtotal)}</span></div>
-      <div class="r"><span>Pajak (${inv.taxPct||0}%)</span><span class="mono">${rp(inv.tax||0)}</span></div>
-      <div class="r grand"><span>Total</span><span class="mono">${rp(inv.total)}</span></div>
-    </div></div>
-    ${inv.notes?`<div class="doc-note"><strong>Catatan:</strong> ${esc(inv.notes)}</div>`:""}
-    <div class="doc-note">Pembayaran ditujukan ke ${esc(COMPANY.name)}. Terima kasih atas kepercayaan Anda.</div>
+    <div style="display:flex;gap:40px;margin-top:18px"><div style="border-top:1.5px solid #111;width:300px"></div><div style="border-top:1.5px solid #111;width:230px"></div></div>
+
+    <div class="pelanggan-lb">PELANGGAN</div>
+    <div class="inv-parties">
+      <div class="inv-box cust">
+        <div class="krow"><div class="k">NAMA</div><div class="v">: ${esc(custName2)}</div></div>
+        <div class="krow"><div class="k">ALAMAT</div><div class="v">: ${esc(custAddr)}</div></div>
+      </div>
+      <div class="inv-box period">
+        <div class="krow"><div class="k">PERIODE</div><div class="v">: ${esc(inv.period||"-")}</div></div>
+      </div>
+    </div>
+
+    <table class="inv-table">
+      <thead><tr>
+        <th style="width:32px">NO.</th><th>KETERANGAN</th><th style="width:60px">QTY</th>
+        <th style="width:130px">HARGA SATUAN<br>(RP.)</th><th style="width:150px">JUMLAH (RP.)</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+
+    <div class="inv-sum">
+      <table>
+        <tr class="line"><td>Subtotal</td><td class="r">${num2(inv.subtotal)}</td></tr>
+        <tr class="line"><td>termasuk PPN</td><td class="r">${num2(inv.ppn||0)}</td></tr>
+        <tr class="line"><td>Termasuk PPH</td><td class="r">${num2(inv.pph||0)}</td></tr>
+        <tr class="total"><td>TOTAL</td><td class="r">${num2(inv.total)}</td></tr>
+        <tr class="sisa"><td>Sisa Tagihan</td><td class="r">${num2(inv.status==="paid"?0:inv.total)}</td></tr>
+      </table>
+    </div>
+
+    <div class="inv-pay-lb">DETAIL PEMBAYARAN</div>
+    <div class="inv-bank">
+      <div class="brow"><div class="k">NAMA BANK :</div><div>${esc(B.name||"")}</div></div>
+      <div class="brow"><div class="k">CABANG BANK :</div><div>${esc(B.branch||"")}</div></div>
+      <div class="brow"><div class="k">NOMOR AKUN BANK :</div><div>${esc(B.account||"")}</div></div>
+      <div class="brow"><div class="k">ATAS NAMA :</div><div>${esc(B.holder||"")}</div></div>
+    </div>
+    <div class="inv-terbilang">
+      <div class="h">TERBILANG</div>
+      <div>${terbilang(inv.total).toUpperCase()} RUPIAH</div>
+    </div>
+
+    <div class="inv-sign">
+      <div class="nm">${esc(COMPANY.signer)}</div>
+      <div>${esc(COMPANY.title)}</div>
+    </div>
+    <div style="clear:both"></div>
   </div>`;
   window.print();
 }
 
-/* ================= PRINT: RECEIPT (KWITANSI) ================= */
+/* ================= PRINT: KWITANSI (gaya Vidya Amaliah) ================= */
 function printReceipt(id){
   const r=DB.receipts.find(x=>x.id===id); if(!r)return;
+  const brandTxt=COMPANY.name.replace(/^CV\.?\s*/i,"").replace(/VIDYA AMALIAH/i,"Vidya Amaliah");
+  // rincian baris (bila ada), jika tidak, tampilkan daftar invoice terbayar sebagai rincian nominal
+  let detailRows="";
+  const lines = (r.lines && r.lines.length) ? r.lines
+    : r.invoiceIds.map(iid=>{ const inv=DB.invoices.find(x=>x.id===iid); return {desc: inv?("Invoice "+inv.number):"", amount: inv?inv.total:0}; });
+  if(lines.length){
+    detailRows=`<div class="kw-detail"><table>${lines.map((l,i)=>`<tr>
+      <td class="no">${i+1}.</td><td>${esc(l.desc)}</td><td class="amt">${rp(l.amount)}</td></tr>`).join("")}</table></div>`;
+  }
   $("#printArea").innerHTML=`<div class="doc">
-    ${docHeader("Kwitansi",r.number)}
-    <div class="doc-meta">
-      <div class="blk"><div class="lb">Telah diterima dari</div><div class="nm">${esc(r.payer||custName(r.customerId))}</div></div>
-      <div class="blk" style="text-align:right"><div class="lb">Detail</div>
-        Tanggal: ${fmtDate(r.date)}<br>Metode: ${esc(r.method||"Tunai")}</div>
+    <div class="kw-head">
+      <div class="kw-logo">
+        <div class="row1">${vaMark(40)}<span class="txt">${esc(brandTxt)}</span></div>
+        <div class="tag">${esc(COMPANY.tagline||"")}</div>
+      </div>
     </div>
-    <div class="terbilang"><strong>Terbilang:</strong> ${terbilang(r.amount)} rupiah</div>
-    <div class="doc-sum"><div class="box">
-      <div class="r grand"><span>Jumlah diterima</span><span class="mono">${rp(r.amount)}</span></div>
-    </div></div>
-    ${r.forWhat?`<div class="doc-note"><strong>Untuk pembayaran:</strong> ${esc(r.forWhat)}</div>`:""}
-    <div class="doc-sign"><div class="s">${esc(COMPANY.addr.split(",")[0]||"")}, ${fmtDate(r.date)}<div class="line">${esc(COMPANY.name)}</div></div></div>
+    <hr class="kw-rule"><hr class="kw-rule b">
+    <div class="kw-title">KWITANSI PEMBAYARAN</div>
+
+    <div class="kw-meta">
+      <div class="row"><div class="k">No</div><div class="c">:</div><div class="v">${esc(r.number)}</div></div>
+      <div class="row"><div class="k">Telah terima dari</div><div class="c">:</div><div class="v">${esc(r.payer||custName(r.customerId))}</div></div>
+      <div class="row"><div class="k">Uang Sejumlah</div><div class="c">:</div><div class="v">${terbilang(r.amount)} Rupiah.</div></div>
+      <div class="row"><div class="k">Untuk Pembayaran</div><div class="c">:</div><div class="v">${esc(r.forWhat||"")}${lines.length?", dengan rincian:":""}</div></div>
+    </div>
+    ${detailRows}
+
+    <div class="kw-foot">
+      <div class="kw-amount">Rp ${num0(r.amount)}</div>
+      <div class="kw-place">${esc(COMPANY.city||"")}, ${longDate(r.date)}</div>
+    </div>
+    <div class="kw-sign">
+      <div class="nm">${esc(COMPANY.signer)}</div>
+      <div>${esc(COMPANY.title)}</div>
+    </div>
+    <div style="clear:both"></div>
   </div>`;
   window.print();
-}
-
-function docHeader(title,no){
-  return `<div class="doc-top">
-    <div class="doc-brand"><div class="m">L</div>
-      <div><div class="t">${esc(COMPANY.name)}</div><div class="s">${esc(COMPANY.addr)} · ${esc(COMPANY.phone)}</div></div></div>
-    <div class="doc-title"><h2>${title}</h2><div class="no">${esc(no)}</div></div>
-  </div>`;
 }
 
 /* ================= TERBILANG (angka -> kata) ================= */
