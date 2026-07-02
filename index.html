@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ledgerine — Invoice & Kwitansi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#12203a;          /* navy tinta */
+  --ink-soft:#2b3d5c;
+  --paper:#f7f4ec;        /* kertas */
+  --paper-2:#efe9db;
+  --gold:#b6863c;         /* emas tembaga */
+  --gold-soft:#e9d9b6;
+  --line:#dcd4c2;
+  --white:#fffdf8;
+  --green:#2f7d55;
+  --green-bg:#e3f0e7;
+  --red:#a8443a;
+  --red-bg:#f4e2df;
+  --amber:#9a6b1f;
+  --amber-bg:#f5ead0;
+  --shadow:0 1px 2px rgba(18,32,58,.06),0 8px 30px rgba(18,32,58,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums}
+.serif{font-family:'Fraunces',serif}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select,textarea{font-family:inherit;font-size:14px}
+h1,h2,h3{font-family:'Fraunces',serif;font-weight:600;letter-spacing:-.01em}
+
+/* ---------- LOGIN ---------- */
+#login{position:fixed;inset:0;background:var(--ink);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
+#login::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(1200px 500px at 80% -10%, rgba(182,134,60,.22), transparent 60%),
+  radial-gradient(800px 400px at 10% 110%, rgba(182,134,60,.12), transparent 60%)}
+.login-card{position:relative;background:var(--paper);border-radius:18px;padding:44px 40px;width:100%;max-width:390px;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.brand{display:flex;align-items:center;gap:11px;margin-bottom:6px}
+.brand-mark{width:38px;height:38px;border-radius:10px;background:var(--ink);display:grid;place-items:center;color:var(--gold);font-family:'Fraunces',serif;font-weight:700;font-size:20px}
+.brand-name{font-family:'Fraunces',serif;font-size:23px;font-weight:600}
+.login-card h2{font-size:15px;font-weight:600;font-family:'Inter';color:var(--ink-soft);margin:22px 0 4px}
+.login-card p.sub{font-size:13px;color:#7b756a;margin-bottom:22px}
+.field{margin-bottom:15px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--ink-soft);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+.field input{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--white);color:var(--ink);transition:.15s}
+.field input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(182,134,60,.15)}
+.btn-primary{width:100%;padding:13px;background:var(--ink);color:var(--gold-soft);border-radius:10px;font-weight:600;font-size:14px;transition:.15s;letter-spacing:.02em}
+.btn-primary:hover{background:#0c1830}
+.login-err{color:var(--red);font-size:13px;margin-top:12px;text-align:center;min-height:18px}
+
+/* ---------- SHELL ---------- */
+#app{display:none;min-height:100vh}
+.topbar{background:var(--ink);color:var(--paper);padding:0 26px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40}
+.topbar .brand-name{color:var(--paper);font-size:20px}
+.topbar .brand-mark{width:32px;height:32px;font-size:17px;background:rgba(255,255,255,.08)}
+.topbar .right{display:flex;align-items:center;gap:16px;font-size:13px}
+.pill-user{display:flex;align-items:center;gap:8px;color:var(--gold-soft)}
+.logout{color:var(--paper);opacity:.7;font-size:13px;padding:6px 12px;border:1px solid rgba(255,255,255,.2);border-radius:8px}
+.logout:hover{opacity:1;border-color:var(--gold)}
+
+.layout{display:flex}
+.nav{width:210px;padding:22px 14px;border-right:1px solid var(--line);min-height:calc(100vh - 60px);position:sticky;top:60px;height:calc(100vh - 60px)}
+.nav-group{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#9a9384;margin:16px 12px 8px}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:9px;color:var(--ink-soft);font-size:14px;font-weight:500;width:100%;text-align:left;transition:.12s;margin-bottom:2px}
+.nav-item svg{width:17px;height:17px;flex:none;opacity:.7}
+.nav-item:hover{background:var(--paper-2)}
+.nav-item.active{background:var(--ink);color:var(--paper)}
+.nav-item.active svg{opacity:1}
+
+.main{flex:1;padding:30px 34px;max-width:1180px}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:14px}
+.page-head .eyebrow{font-size:12px;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+.page-head h1{font-size:30px}
+.page-head p{color:#7b756a;font-size:14px;margin-top:4px}
+
+/* stat cards */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-bottom:28px}
+.stat{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow)}
+.stat .label{font-size:12px;color:#7b756a;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.stat .val{font-family:'Fraunces',serif;font-size:27px;font-weight:600;margin-top:6px}
+.stat .val.sm{font-size:22px}
+.stat.accent{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.stat.accent .label{color:var(--gold-soft)}
+.stat.accent .val{color:var(--white)}
+
+/* buttons */
+.btn{padding:10px 18px;border-radius:10px;font-weight:600;font-size:13.5px;transition:.14s;display:inline-flex;align-items:center;gap:7px}
+.btn svg{width:15px;height:15px}
+.btn.dark{background:var(--ink);color:var(--gold-soft)}
+.btn.dark:hover{background:#0c1830}
+.btn.gold{background:var(--gold);color:#fff}
+.btn.gold:hover{background:#a4762f}
+.btn.ghost{background:var(--white);color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--gold);color:var(--gold)}
+.btn.sm{padding:7px 12px;font-size:12.5px}
+.btn.danger{background:var(--red-bg);color:var(--red)}
+.btn.danger:hover{background:#eecfca}
+
+/* table / card */
+.card{background:var(--white);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.card-head{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.card-head h3{font-size:17px}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.search{position:relative}
+.search input{padding:9px 12px 9px 34px;border:1px solid var(--line);border-radius:9px;background:var(--paper);width:220px}
+.search input:focus{outline:none;border-color:var(--gold);background:var(--white)}
+.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:#9a9384}
+
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9a9384;padding:12px 20px;border-bottom:1px solid var(--line);background:var(--paper)}
+td{padding:13px 20px;border-bottom:1px solid var(--paper-2);font-size:14px;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr{transition:.1s}
+tbody tr:hover{background:var(--paper)}
+td .name{font-weight:600}
+td .muted{color:#9a9384;font-size:12.5px}
+.num{text-align:right;font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.badge.paid{background:var(--green-bg);color:var(--green)}
+.badge.unpaid{background:var(--red-bg);color:var(--red)}
+.badge.partial{background:var(--amber-bg);color:var(--amber)}
+.row-actions{display:flex;gap:6px;justify-content:flex-end}
+.icon-btn{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:var(--ink-soft);border:1px solid var(--line);background:var(--white)}
+.icon-btn:hover{border-color:var(--gold);color:var(--gold)}
+.icon-btn svg{width:15px;height:15px}
+
+.empty{padding:50px 20px;text-align:center;color:#9a9384}
+.empty svg{width:38px;height:38px;opacity:.4;margin-bottom:10px}
+
+/* modal */
+.overlay{position:fixed;inset:0;background:rgba(18,32,58,.5);backdrop-filter:blur(3px);z-index:60;display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
+.overlay.show{display:flex}
+.modal{background:var(--paper);border-radius:16px;width:100%;max-width:640px;box-shadow:0 30px 80px rgba(0,0,0,.35);animation:pop .18s ease}
+.modal.wide{max-width:860px}
+@keyframes pop{from{transform:translateY(14px);opacity:0}to{transform:none;opacity:1}}
+.modal-head{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.modal-head h3{font-size:20px}
+.modal-head .x{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:#9a9384;font-size:20px}
+.modal-head .x:hover{background:var(--paper-2);color:var(--ink)}
+.modal-body{padding:22px 24px}
+.modal-foot{padding:16px 24px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px;background:var(--white);border-radius:0 0 16px 16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-field{margin-bottom:15px}
+.form-field label{display:block;font-size:12px;font-weight:600;color:var(--ink-soft);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
+.form-field input,.form-field select,.form-field textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:9px;background:var(--white)}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(182,134,60,.13)}
+
+/* invoice line items */
+.li-row{display:grid;grid-template-columns:1fr 78px 118px 118px 34px;gap:8px;align-items:center;margin-bottom:8px}
+.li-head{display:grid;grid-template-columns:1fr 78px 118px 118px 34px;gap:8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#9a9384;margin-bottom:8px;padding:0 2px}
+.li-row input,.li-row select{padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--white)}
+.li-del{width:32px;height:32px;border-radius:7px;background:var(--red-bg);color:var(--red);display:grid;place-items:center}
+.li-total{display:flex;flex-direction:column;gap:4px;margin-top:16px;padding-top:16px;border-top:1px dashed var(--line)}
+.li-total .r{display:flex;justify-content:space-between;font-size:14px;color:var(--ink-soft)}
+.li-total .r.grand{font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--ink);padding-top:8px;margin-top:4px;border-top:1px solid var(--line)}
+
+/* checklist for receipt */
+.inv-pick{border:1px solid var(--line);border-radius:10px;max-height:280px;overflow-y:auto;background:var(--white)}
+.inv-pick label{display:flex;align-items:center;gap:12px;padding:12px 15px;border-bottom:1px solid var(--paper-2);cursor:pointer}
+.inv-pick label:last-child{border-bottom:none}
+.inv-pick label:hover{background:var(--paper)}
+.inv-pick input[type=checkbox]{width:18px;height:18px;accent-color:var(--gold)}
+.inv-pick .ip-info{flex:1}
+.inv-pick .ip-info .n{font-weight:600;font-size:14px}
+.inv-pick .ip-info .d{font-size:12px;color:#9a9384}
+.inv-pick .ip-amt{font-family:'JetBrains Mono',monospace;font-weight:600}
+
+/* toast + loader */
+#toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--paper);padding:13px 22px;border-radius:11px;font-size:14px;font-weight:500;box-shadow:0 12px 40px rgba(0,0,0,.3);z-index:200;opacity:0;transition:.28s;display:flex;align-items:center;gap:10px}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+#toast.err{background:var(--red)}
+#loader{position:fixed;inset:0;background:rgba(247,244,236,.7);backdrop-filter:blur(2px);z-index:150;display:none;align-items:center;justify-content:center}
+#loader.show{display:flex}
+.spin{width:38px;height:38px;border:3px solid var(--gold-soft);border-top-color:var(--gold);border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* print document (invoice/receipt) */
+.doc{background:#fff;color:#1a1a1a;font-family:'Inter';padding:44px 46px;width:100%}
+.doc-top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid var(--ink);padding-bottom:22px;margin-bottom:26px}
+.doc-brand{display:flex;align-items:center;gap:11px}
+.doc-brand .m{width:44px;height:44px;border-radius:11px;background:var(--ink);color:var(--gold);display:grid;place-items:center;font-family:'Fraunces';font-weight:700;font-size:23px}
+.doc-brand .t{font-family:'Fraunces';font-size:23px;font-weight:600}
+.doc-brand .s{font-size:12px;color:#777}
+.doc-title{text-align:right}
+.doc-title h2{font-family:'Fraunces';font-size:32px;color:var(--ink);letter-spacing:.02em}
+.doc-title .no{font-family:'JetBrains Mono';font-size:13px;color:#666;margin-top:3px}
+.doc-meta{display:flex;justify-content:space-between;margin-bottom:26px;gap:30px}
+.doc-meta .blk{font-size:13.5px;line-height:1.7}
+.doc-meta .blk .lb{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:#999;font-weight:700;margin-bottom:5px}
+.doc-meta .blk .nm{font-weight:600;font-size:15px}
+.doc table{margin-bottom:20px}
+.doc th{background:var(--ink);color:#fff;padding:11px 14px;font-size:11px}
+.doc td{padding:11px 14px;border-bottom:1px solid #eee;font-size:13.5px}
+.doc-sum{display:flex;justify-content:flex-end}
+.doc-sum .box{width:290px}
+.doc-sum .r{display:flex;justify-content:space-between;padding:7px 0;font-size:14px}
+.doc-sum .r.grand{border-top:2px solid var(--ink);margin-top:6px;padding-top:12px;font-family:'Fraunces';font-size:20px;font-weight:600;color:var(--ink)}
+.doc-note{margin-top:30px;padding-top:18px;border-top:1px solid #eee;font-size:12.5px;color:#777;line-height:1.6}
+.terbilang{background:var(--paper);border-left:3px solid var(--gold);padding:12px 16px;border-radius:0 8px 8px 0;font-style:italic;font-size:14px;margin:20px 0;color:var(--ink)}
+.doc-sign{display:flex;justify-content:flex-end;margin-top:44px}
+.doc-sign .s{text-align:center;font-size:13.5px}
+.doc-sign .line{margin-top:60px;border-top:1px solid #333;padding-top:6px;min-width:180px;font-weight:600}
+.rcpt-inv-list{margin:16px 0}
+.rcpt-inv-list .h{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#999;font-weight:700;margin-bottom:8px}
+.rcpt-inv-list .it{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:13.5px}
+
+@media print{
+  body *{visibility:hidden}
+  #printArea,#printArea *{visibility:visible}
+  #printArea{position:absolute;inset:0;padding:0}
+  .doc{box-shadow:none;padding:20px}
+  @page{margin:14mm}
+}
+
+@media(max-width:860px){
+  .nav{display:none}
+  .main{padding:20px 16px}
+  .grid2{grid-template-columns:1fr}
+  .li-head,.li-row{grid-template-columns:1fr 60px 90px 34px}
+  .li-head span:nth-child(4),.li-row .li-sub{display:none}
+  .search input{width:150px}
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== LOGIN ===================== -->
+<div id="login">
+  <div class="login-card">
+    <div class="brand">
+      <div class="brand-mark">L</div>
+      <div class="brand-name">Ledgerine</div>
+    </div>
+    <h2>Masuk ke akun Anda</h2>
+    <p class="sub">Sistem penerbitan invoice & kwitansi pembayaran.</p>
+    <div class="field">
+      <label>Nama pengguna</label>
+      <input id="lUser" type="text" autocomplete="username" placeholder="admin">
+    </div>
+    <div class="field">
+      <label>Kata sandi</label>
+      <input id="lPass" type="password" autocomplete="current-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn-primary" onclick="doLogin()">Masuk</button>
+    <div class="login-err" id="lErr"></div>
+  </div>
+</div>
+
+<!-- ===================== APP ===================== -->
+<div id="app">
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-mark">L</div>
+      <div class="brand-name">Ledgerine</div>
+    </div>
+    <div class="right">
+      <div class="pill-user">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg>
+        <span id="whoami">admin</span>
+      </div>
+      <button class="logout" onclick="doLogout()">Keluar</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <nav class="nav">
+      <div class="nav-group">Utama</div>
+      <button class="nav-item active" data-page="dashboard" onclick="go('dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Dashboard</button>
+      <button class="nav-item" data-page="invoices" onclick="go('invoices')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>Invoice</button>
+      <button class="nav-item" data-page="receipts" onclick="go('receipts')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 2v20l3-2 3 2 3-2 3 2 3-2 1 1V2l-1 1-3-2-3 2-3-2-3 2z"/><path d="M8 8h8M8 12h5"/></svg>Kwitansi</button>
+      <div class="nav-group">Data Master</div>
+      <button class="nav-item" data-page="customers" onclick="go('customers')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="4"/><path d="M2 21v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1M17 3.5a4 4 0 0 1 0 7M23 21v-1a5 5 0 0 0-4-4.9"/></svg>Pelanggan</button>
+      <button class="nav-item" data-page="products" onclick="go('products')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2M3 8h18v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 12h6"/></svg>Barang</button>
+    </nav>
+
+    <main class="main" id="view"><!-- pages render here --></main>
+  </div>
+</div>
+
+<!-- modal / overlays -->
+<div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
+<div id="toast"></div>
+<div id="loader"><div class="spin"></div></div>
+<div style="position:absolute;left:-9999px;top:0" id="printArea"></div>
+
+<script src="config.js"></script>
+<script>
+/* =========================================================
+   KONFIGURASI  — ganti API_URL dengan URL Web App Apps Script
+   ========================================================= */
+const API_URL = (window.LEDGERINE_CONFIG && window.LEDGERINE_CONFIG.API_URL) || "";
+const COMPANY = (window.LEDGERINE_CONFIG && window.LEDGERINE_CONFIG.COMPANY) || {
+  name:"CV Vidya Amaliah", addr:"Manado, Sulawesi Utara", phone:"0812-xxxx-xxxx", email:"info@vidyaamaliah.co.id"
+};
+/* Login: kredensial diverifikasi di backend Apps Script.
+   Default fallback (jika belum set di backend): admin / admin123 */
+
+/* ---------- state ---------- */
+let DB = { customers:[], products:[], invoices:[], receipts:[] };
+let SESSION = null;
+
+/* ---------- utils ---------- */
+const $ = s => document.querySelector(s);
+const rp = n => "Rp " + (Number(n)||0).toLocaleString("id-ID");
+const esc = s => (s==null?"":String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+const todayStr = () => new Date().toISOString().slice(0,10);
+const fmtDate = d => d? new Date(d).toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"}) : "-";
+function toast(msg,err){const t=$("#toast");t.textContent=msg;t.className=err?"err show":"show";setTimeout(()=>t.className="",2600);}
+function loader(on){$("#loader").classList.toggle("show",on);}
+
+/* ---------- API (GET-only, JSONP-safe via query params) ---------- */
+async function api(action, payload){
+  if(!API_URL){ return localFallback(action,payload); }
+  loader(true);
+  try{
+    const url = API_URL + "?action=" + encodeURIComponent(action)
+      + "&data=" + encodeURIComponent(JSON.stringify(payload||{}))
+      + "&token=" + encodeURIComponent(SESSION?SESSION.token:"");
+    const res = await fetch(url);
+    const json = await res.json();
+    if(!json.ok) throw new Error(json.error||"Gagal memproses");
+    return json.data;
+  }catch(e){ toast(e.message,true); throw e; }
+  finally{ loader(false); }
+}
+
+/* ---------- LOCAL FALLBACK (demo tanpa backend) ---------- */
+function lsGet(){ try{return JSON.parse(localStorage.getItem("ledgerine")||"null");}catch(e){return null;} }
+function lsSet(){ localStorage.setItem("ledgerine",JSON.stringify(DB)); }
+function localFallback(action,p){
+  return new Promise(res=>{
+    if(action==="login"){
+      if(p.user==="admin"&&p.pass==="admin123") return res({token:"local",user:"admin"});
+      throw new Error("Nama pengguna atau kata sandi salah");
+    }
+    if(action==="bootstrap"){ const s=lsGet(); if(s)DB=s; return res(DB); }
+    // mutations
+    const fn={
+      saveCustomer:()=>upsert("customers",p),
+      deleteCustomer:()=>del("customers",p.id),
+      saveProduct:()=>upsert("products",p),
+      deleteProduct:()=>del("products",p.id),
+      saveInvoice:()=>upsert("invoices",p),
+      deleteInvoice:()=>del("invoices",p.id),
+      saveReceipt:()=>saveReceiptLocal(p),
+      deleteReceipt:()=>delReceiptLocal(p.id)
+    }[action];
+    if(fn){ const r=fn(); lsSet(); return res(r); }
+    res(DB);
+  });
+}
+function upsert(coll,item){ const a=DB[coll]; const i=a.findIndex(x=>x.id===item.id); if(i>=0)a[i]=item; else a.push(item); return item; }
+function del(coll,id){ DB[coll]=DB[coll].filter(x=>x.id!==id); return {id}; }
+function saveReceiptLocal(r){
+  upsert("receipts",r);
+  // mark invoices as paid
+  r.invoiceIds.forEach(iid=>{ const inv=DB.invoices.find(x=>x.id===iid); if(inv){inv.status="paid"; inv.paidAt=r.date;} });
+  return r;
+}
+function delReceiptLocal(id){
+  const r=DB.receipts.find(x=>x.id===id);
+  if(r) r.invoiceIds.forEach(iid=>{ const inv=DB.invoices.find(x=>x.id===iid); if(inv){inv.status="unpaid"; inv.paidAt="";} });
+  DB.receipts=DB.receipts.filter(x=>x.id!==id);
+  return {id};
+}
+
+/* ================= LOGIN ================= */
+async function doLogin(){
+  const user=$("#lUser").value.trim(), pass=$("#lPass").value;
+  $("#lErr").textContent="";
+  if(!user||!pass){ $("#lErr").textContent="Isi nama pengguna dan kata sandi."; return; }
+  try{
+    loader(true);
+    const s = await (API_URL ? api("login",{user,pass}) : localFallback("login",{user,pass}));
+    SESSION = s; sessionStorage.setItem("ledgerine_session",JSON.stringify(s));
+    await enterApp();
+  }catch(e){ $("#lErr").textContent = e.message || "Login gagal"; }
+  finally{ loader(false); }
+}
+function doLogout(){ SESSION=null; sessionStorage.removeItem("ledgerine_session"); location.reload(); }
+
+async function enterApp(){
+  $("#login").style.display="none";
+  $("#app").style.display="block";
+  $("#whoami").textContent = SESSION.user;
+  await api("bootstrap"); // fills DB when using backend; localFallback fills too
+  go("dashboard");
+}
+
+/* ================= ROUTER ================= */
+let CURRENT="dashboard";
+function go(page){
+  CURRENT=page;
+  document.querySelectorAll(".nav-item").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
+  ({dashboard:renderDashboard,invoices:renderInvoices,receipts:renderReceipts,customers:renderCustomers,products:renderProducts}[page])();
+}
+
+/* ================= DASHBOARD ================= */
+function renderDashboard(){
+  const inv=DB.invoices;
+  const total=inv.reduce((s,i)=>s+i.total,0);
+  const paid=inv.filter(i=>i.status==="paid").reduce((s,i)=>s+i.total,0);
+  const outstanding=total-paid;
+  const unpaidCount=inv.filter(i=>i.status!=="paid").length;
+  const recent=[...inv].sort((a,b)=>(b.date||"").localeCompare(a.date||"")).slice(0,6);
+  $("#view").innerHTML=`
+    <div class="page-head"><div>
+      <div class="eyebrow">Ringkasan</div><h1>Dashboard</h1>
+      <p>Selamat datang kembali. Berikut kondisi keuangan terkini.</p>
+    </div>
+    <button class="btn dark" onclick="openInvoiceModal()">${plusIcon()} Invoice Baru</button></div>
+    <div class="stats">
+      <div class="stat accent"><div class="label">Total Tagihan</div><div class="val">${rp(total)}</div></div>
+      <div class="stat"><div class="label">Sudah Terbayar</div><div class="val sm" style="color:var(--green)">${rp(paid)}</div></div>
+      <div class="stat"><div class="label">Belum Terbayar</div><div class="val sm" style="color:var(--red)">${rp(outstanding)}</div></div>
+      <div class="stat"><div class="label">Invoice Outstanding</div><div class="val sm">${unpaidCount}</div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Invoice Terbaru</h3>
+        <button class="btn ghost sm" onclick="go('invoices')">Lihat semua →</button></div>
+      ${recent.length? `<table><thead><tr><th>No. Invoice</th><th>Pelanggan</th><th>Tanggal</th><th class="num">Total</th><th>Status</th></tr></thead>
+        <tbody>${recent.map(i=>`<tr>
+          <td class="mono">${esc(i.number)}</td>
+          <td class="name">${esc(custName(i.customerId))}</td>
+          <td>${fmtDate(i.date)}</td>
+          <td class="num">${rp(i.total)}</td>
+          <td>${statusBadge(i.status)}</td></tr>`).join("")}</tbody></table>`
+        : emptyBox("Belum ada invoice","Buat invoice pertama Anda untuk memulai.")}
+    </div>`;
+}
+
+/* ================= CUSTOMERS ================= */
+let custSearch="";
+function renderCustomers(){
+  const list=DB.customers.filter(c=>match(c,custSearch,["name","company","phone","email"]));
+  $("#view").innerHTML=`
+    <div class="page-head"><div>
+      <div class="eyebrow">Data Master</div><h1>Pelanggan</h1>
+      <p>${DB.customers.length} pelanggan terdaftar.</p></div>
+      <button class="btn dark" onclick="openCustomerModal()">${plusIcon()} Tambah Pelanggan</button></div>
+    <div class="card">
+      <div class="card-head"><h3>Daftar Pelanggan</h3>
+        <div class="search">${searchIcon()}<input placeholder="Cari pelanggan..." value="${esc(custSearch)}" oninput="custSearch=this.value;renderCustomers()"></div></div>
+      ${list.length? `<table><thead><tr><th>Nama</th><th>Perusahaan</th><th>Kontak</th><th>Alamat</th><th></th></tr></thead>
+        <tbody>${list.map(c=>`<tr>
+          <td class="name">${esc(c.name)}</td>
+          <td>${esc(c.company)||'<span class="muted">—</span>'}</td>
+          <td><div>${esc(c.phone)||''}</div><div class="muted">${esc(c.email)||''}</div></td>
+          <td class="muted">${esc(c.address)||'—'}</td>
+          <td><div class="row-actions">
+            <button class="icon-btn" onclick='openCustomerModal(${JSON.stringify(c)})' title="Edit">${editIcon()}</button>
+            <button class="icon-btn" onclick="confirmDelete('customer','${c.id}')" title="Hapus">${trashIcon()}</button>
+          </div></td></tr>`).join("")}</tbody></table>`
+        : emptyBox("Belum ada pelanggan","Tambahkan pelanggan untuk mulai membuat invoice.")}
+    </div>`;
+}
+function openCustomerModal(c){
+  c=c||{id:uid("cust-"),name:"",company:"",phone:"",email:"",address:""};
+  showModal(`
+    <div class="modal-head"><h3>${c.name?"Edit":"Tambah"} Pelanggan</h3><button class="x" onclick="closeModal()">×</button></div>
+    <div class="modal-body">
+      <div class="form-field"><label>Nama pelanggan *</label><input id="c_name" value="${esc(c.name)}"></div>
+      <div class="grid2">
+        <div class="form-field"><label>Perusahaan</label><input id="c_company" value="${esc(c.company)}"></div>
+        <div class="form-field"><label>Telepon</label><input id="c_phone" value="${esc(c.phone)}"></div>
+      </div>
+      <div class="form-field"><label>Email</label><input id="c_email" value="${esc(c.email)}"></div>
+      <div class="form-field"><label>Alamat</label><textarea id="c_address" rows="2">${esc(c.address)}</textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" onclick="closeModal()">Batal</button>
+      <button class="btn dark" onclick='saveCustomer("${c.id}")'>Simpan</button>
+    </div>`);
+}
+async function saveCustomer(id){
+  const name=$("#c_name").value.trim();
+  if(!name){ toast("Nama pelanggan wajib diisi",true); return; }
+  const c={id,name,company:$("#c_company").value.trim(),phone:$("#c_phone").value.trim(),
+    email:$("#c_email").value.trim(),address:$("#c_address").value.trim()};
+  await api("saveCustomer",c); localFallback("saveCustomer",c);
+  closeModal(); toast("Pelanggan tersimpan"); renderCustomers();
+}
+
+/* ================= PRODUCTS ================= */
+let prodSearch="";
+function renderProducts(){
+  const list=DB.products.filter(p=>match(p,prodSearch,["name","sku","unit"]));
+  $("#view").innerHTML=`
+    <div class="page-head"><div>
+      <div class="eyebrow">Data Master</div><h1>Barang</h1>
+      <p>${DB.products.length} barang terdaftar.</p></div>
+      <button class="btn dark" onclick="openProductModal()">${plusIcon()} Tambah Barang</button></div>
+    <div class="card">
+      <div class="card-head"><h3>Daftar Barang</h3>
+        <div class="search">${searchIcon()}<input placeholder="Cari barang..." value="${esc(prodSearch)}" oninput="prodSearch=this.value;renderProducts()"></div></div>
+      ${list.length? `<table><thead><tr><th>Nama Barang</th><th>SKU</th><th>Satuan</th><th class="num">Harga</th><th></th></tr></thead>
+        <tbody>${list.map(p=>`<tr>
+          <td class="name">${esc(p.name)}</td>
+          <td class="mono muted">${esc(p.sku)||'—'}</td>
+          <td>${esc(p.unit)||'pcs'}</td>
+          <td class="num">${rp(p.price)}</td>
+          <td><div class="row-actions">
+            <button class="icon-btn" onclick='openProductModal(${JSON.stringify(p)})'>${editIcon()}</button>
+            <button class="icon-btn" onclick="confirmDelete('product','${p.id}')">${trashIcon()}</button>
+          </div></td></tr>`).join("")}</tbody></table>`
+        : emptyBox("Belum ada barang","Tambahkan barang/jasa yang akan ditagihkan.")}
+    </div>`;
+}
+function openProductModal(p){
+  p=p||{id:uid("prod-"),name:"",sku:"",unit:"pcs",price:0};
+  showModal(`
+    <div class="modal-head"><h3>${p.name?"Edit":"Tambah"} Barang</h3><button class="x" onclick="closeModal()">×</button></div>
+    <div class="modal-body">
+      <div class="form-field"><label>Nama barang / jasa *</label><input id="p_name" value="${esc(p.name)}"></div>
+      <div class="grid2">
+        <div class="form-field"><label>SKU / Kode</label><input id="p_sku" value="${esc(p.sku)}"></div>
+        <div class="form-field"><label>Satuan</label><input id="p_unit" value="${esc(p.unit)}" placeholder="pcs, box, jam..."></div>
+      </div>
+      <div class="form-field"><label>Harga satuan (Rp) *</label><input id="p_price" type="number" min="0" value="${p.price}"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" onclick="closeModal()">Batal</button>
+      <button class="btn dark" onclick='saveProduct("${p.id}")'>Simpan</button>
+    </div>`);
+}
+async function saveProduct(id){
+  const name=$("#p_name").value.trim();
+  if(!name){ toast("Nama barang wajib diisi",true); return; }
+  const p={id,name,sku:$("#p_sku").value.trim(),unit:$("#p_unit").value.trim()||"pcs",price:Number($("#p_price").value)||0};
+  await api("saveProduct",p); localFallback("saveProduct",p);
+  closeModal(); toast("Barang tersimpan"); renderProducts();
+}
+
+/* ================= INVOICES ================= */
+let invSearch="",invFilter="all";
+function renderInvoices(){
+  let list=DB.invoices.filter(i=>match({...i,cust:custName(i.customerId)},invSearch,["number","cust"]));
+  if(invFilter!=="all") list=list.filter(i=>invFilter==="paid"?i.status==="paid":i.status!=="paid");
+  list.sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+  $("#view").innerHTML=`
+    <div class="page-head"><div>
+      <div class="eyebrow">Transaksi</div><h1>Invoice</h1>
+      <p>${DB.invoices.length} invoice diterbitkan.</p></div>
+      <button class="btn dark" onclick="openInvoiceModal()">${plusIcon()} Invoice Baru</button></div>
+    <div class="card">
+      <div class="card-head"><h3>Daftar Invoice</h3>
+        <div class="toolbar">
+          <select onchange="invFilter=this.value;renderInvoices()" style="padding:9px 12px;border:1px solid var(--line);border-radius:9px;background:var(--paper)">
+            <option value="all"${invFilter==="all"?" selected":""}>Semua status</option>
+            <option value="unpaid"${invFilter==="unpaid"?" selected":""}>Belum bayar</option>
+            <option value="paid"${invFilter==="paid"?" selected":""}>Lunas</option>
+          </select>
+          <div class="search">${searchIcon()}<input placeholder="Cari invoice..." value="${esc(invSearch)}" oninput="invSearch=this.value;renderInvoices()"></div>
+        </div></div>
+      ${list.length? `<table><thead><tr><th>No. Invoice</th><th>Pelanggan</th><th>Tanggal</th><th>Jatuh Tempo</th><th class="num">Total</th><th>Status</th><th></th></tr></thead>
+        <tbody>${list.map(i=>`<tr>
+          <td class="mono name">${esc(i.number)}</td>
+          <td class="name">${esc(custName(i.customerId))}</td>
+          <td>${fmtDate(i.date)}</td>
+          <td>${fmtDate(i.due)}</td>
+          <td class="num">${rp(i.total)}</td>
+          <td>${statusBadge(i.status)}</td>
+          <td><div class="row-actions">
+            <button class="icon-btn" onclick="printInvoice('${i.id}')" title="Cetak / PDF">${printIcon()}</button>
+            <button class="icon-btn" onclick='openInvoiceModal(${JSON.stringify(i)})' title="Edit">${editIcon()}</button>
+            <button class="icon-btn" onclick="confirmDelete('invoice','${i.id}')" title="Hapus">${trashIcon()}</button>
+          </div></td></tr>`).join("")}</tbody></table>`
+        : emptyBox("Belum ada invoice","Klik “Invoice Baru” untuk menagih pelanggan.")}
+    </div>`;
+}
+
+function openInvoiceModal(inv){
+  if(!DB.customers.length){ toast("Tambahkan pelanggan dulu",true); go("customers"); return; }
+  if(!DB.products.length){ toast("Tambahkan barang dulu",true); go("products"); return; }
+  const isEdit=!!inv;
+  inv=inv||{id:uid("inv-"),number:nextInvoiceNo(),customerId:DB.customers[0].id,date:todayStr(),due:"",
+    items:[{productId:"",qty:1,price:0}],taxPct:0,notes:"",status:"unpaid"};
+  IEDIT=JSON.parse(JSON.stringify(inv));
+  showModal(`
+    <div class="modal-head"><h3>${isEdit?"Edit":"Buat"} Invoice</h3><button class="x" onclick="closeModal()">×</button></div>
+    <div class="modal-body">
+      <div class="grid2">
+        <div class="form-field"><label>No. Invoice</label><input id="i_number" value="${esc(inv.number)}"></div>
+        <div class="form-field"><label>Pelanggan *</label><select id="i_customer">
+          ${DB.customers.map(c=>`<option value="${c.id}"${c.id===inv.customerId?" selected":""}>${esc(c.name)}${c.company?" — "+esc(c.company):""}</option>`).join("")}
+        </select></div>
+      </div>
+      <div class="grid2">
+        <div class="form-field"><label>Tanggal invoice</label><input id="i_date" type="date" value="${inv.date}"></div>
+        <div class="form-field"><label>Jatuh tempo</label><input id="i_due" type="date" value="${inv.due||""}"></div>
+      </div>
+      <div class="form-field"><label>Item barang</label>
+        <div class="li-head"><span>Barang</span><span>Qty</span><span>Harga</span><span class="li-sub">Subtotal</span><span></span></div>
+        <div id="i_items"></div>
+        <button class="btn ghost sm" style="margin-top:8px" onclick="addLine()">${plusIcon()} Tambah baris</button>
+      </div>
+      <div class="grid2">
+        <div class="form-field"><label>Pajak / PPN (%)</label><input id="i_tax" type="number" min="0" step="0.1" value="${inv.taxPct||0}" oninput="calcTotals()"></div>
+        <div class="form-field"><label>Catatan</label><input id="i_notes" value="${esc(inv.notes)}"></div>
+      </div>
+      <div class="li-total">
+        <div class="r"><span>Subtotal</span><span class="mono" id="t_sub">Rp 0</span></div>
+        <div class="r"><span>Pajak</span><span class="mono" id="t_tax">Rp 0</span></div>
+        <div class="r grand"><span>Total Tagihan</span><span class="mono" id="t_grand">Rp 0</span></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" onclick="closeModal()">Batal</button>
+      <button class="btn dark" onclick='saveInvoice()'>Simpan Invoice</button>
+    </div>`);
+  renderLines();
+}
+let IEDIT=null;
+function renderLines(){
+  const box=$("#i_items"); box.innerHTML="";
+  IEDIT.items.forEach((it,idx)=>{
+    const row=document.createElement("div"); row.className="li-row";
+    row.innerHTML=`
+      <select onchange="onProductPick(${idx},this.value)">
+        <option value="">— pilih barang —</option>
+        ${DB.products.map(p=>`<option value="${p.id}"${p.id===it.productId?" selected":""}>${esc(p.name)}</option>`).join("")}
+      </select>
+      <input type="number" min="0" value="${it.qty}" oninput="IEDIT.items[${idx}].qty=Number(this.value)||0;calcTotals()">
+      <input type="number" min="0" value="${it.price}" oninput="IEDIT.items[${idx}].price=Number(this.value)||0;calcTotals()">
+      <div class="num li-sub mono" style="align-self:center" id="sub_${idx}">Rp 0</div>
+      <button class="li-del" onclick="delLine(${idx})">${trashIcon()}</button>`;
+    box.appendChild(row);
+  });
+  calcTotals();
+}
+function onProductPick(idx,pid){
+  const p=DB.products.find(x=>x.id===pid);
+  IEDIT.items[idx].productId=pid;
+  if(p){ IEDIT.items[idx].price=p.price; }
+  renderLines();
+}
+function addLine(){ IEDIT.items.push({productId:"",qty:1,price:0}); renderLines(); }
+function delLine(i){ IEDIT.items.splice(i,1); if(!IEDIT.items.length)IEDIT.items.push({productId:"",qty:1,price:0}); renderLines(); }
+function calcTotals(){
+  let sub=0;
+  IEDIT.items.forEach((it,idx)=>{ const s=(it.qty||0)*(it.price||0); sub+=s; const el=$("#sub_"+idx); if(el)el.textContent=rp(s); });
+  const tax=sub*(Number($("#i_tax").value)||0)/100;
+  $("#t_sub").textContent=rp(sub); $("#t_tax").textContent=rp(tax); $("#t_grand").textContent=rp(sub+tax);
+}
+async function saveInvoice(){
+  const cust=$("#i_customer").value;
+  const items=IEDIT.items.filter(it=>it.productId&&it.qty>0).map(it=>{
+    const p=DB.products.find(x=>x.id===it.productId);
+    return {productId:it.productId,name:p?p.name:"",unit:p?p.unit:"",qty:it.qty,price:it.price,subtotal:it.qty*it.price};
+  });
+  if(!items.length){ toast("Tambahkan minimal 1 barang",true); return; }
+  const sub=items.reduce((s,i)=>s+i.subtotal,0);
+  const taxPct=Number($("#i_tax").value)||0;
+  const tax=sub*taxPct/100;
+  const inv={id:IEDIT.id,number:$("#i_number").value.trim(),customerId:cust,
+    date:$("#i_date").value,due:$("#i_due").value,items,taxPct,tax,subtotal:sub,total:sub+tax,
+    notes:$("#i_notes").value.trim(),status:IEDIT.status||"unpaid",paidAt:IEDIT.paidAt||""};
+  await api("saveInvoice",inv); localFallback("saveInvoice",inv);
+  closeModal(); toast("Invoice tersimpan"); renderInvoices();
+}
+function nextInvoiceNo(){
+  const y=new Date().getFullYear(),m=String(new Date().getMonth()+1).padStart(2,"0");
+  const seq=DB.invoices.length+1;
+  return `INV/${y}/${m}/${String(seq).padStart(4,"0")}`;
+}
+
+/* ================= RECEIPTS (KWITANSI) ================= */
+let rcptSearch="";
+function renderReceipts(){
+  const list=DB.receipts.filter(r=>match({...r,cust:custName(r.customerId)},rcptSearch,["number","cust","payer"]))
+    .sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+  $("#view").innerHTML=`
+    <div class="page-head"><div>
+      <div class="eyebrow">Transaksi</div><h1>Kwitansi Pembayaran</h1>
+      <p>${DB.receipts.length} kwitansi diterbitkan. Satu kwitansi dapat mencakup beberapa invoice.</p></div>
+      <button class="btn dark" onclick="openReceiptModal()">${plusIcon()} Kwitansi Baru</button></div>
+    <div class="card">
+      <div class="card-head"><h3>Daftar Kwitansi</h3>
+        <div class="search">${searchIcon()}<input placeholder="Cari kwitansi..." value="${esc(rcptSearch)}" oninput="rcptSearch=this.value;renderReceipts()"></div></div>
+      ${list.length? `<table><thead><tr><th>No. Kwitansi</th><th>Diterima dari</th><th>Tanggal</th><th>Metode</th><th class="num">Jumlah</th><th></th></tr></thead>
+        <tbody>${list.map(r=>`<tr>
+          <td class="mono name">${esc(r.number)}</td>
+          <td class="name">${esc(r.payer||custName(r.customerId))}</td>
+          <td>${fmtDate(r.date)}</td>
+          <td>${esc(r.method||"Tunai")}</td>
+          <td class="num">${rp(r.amount)}</td>
+          <td><div class="row-actions">
+            <button class="icon-btn" onclick="printReceipt('${r.id}')" title="Cetak / PDF">${printIcon()}</button>
+            <button class="icon-btn" onclick="confirmDelete('receipt','${r.id}')" title="Hapus">${trashIcon()}</button>
+          </div></td></tr>`).join("")}</tbody></table>`
+        : emptyBox("Belum ada kwitansi","Terbitkan kwitansi setelah invoice dibayar.")}
+    </div>`;
+}
+
+function openReceiptModal(){
+  const unpaid=DB.invoices.filter(i=>i.status!=="paid");
+  if(!unpaid.length){ toast("Tidak ada invoice yang belum dibayar",true); return; }
+  RSEL={};
+  showModal(`
+    <div class="modal-head"><h3>Terbitkan Kwitansi</h3><button class="x" onclick="closeModal()">×</button></div>
+    <div class="modal-body">
+      <div class="form-field"><label>Pilih invoice yang dibayar *</label>
+        <p style="font-size:12.5px;color:#7b756a;margin-bottom:10px">Kwitansi hanya menampilkan jumlah uang yang diterima — rincian invoice tidak dicetak.</p>
+        <div class="inv-pick" id="r_invlist">
+          ${unpaid.map(i=>`<label>
+            <input type="checkbox" value="${i.id}" data-amt="${i.total}" onchange="onRcptPick()">
+            <div class="ip-info"><div class="n">${esc(i.number)}</div><div class="d">${esc(custName(i.customerId))} · ${fmtDate(i.date)}</div></div>
+            <div class="ip-amt">${rp(i.total)}</div>
+          </label>`).join("")}
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="form-field"><label>No. Kwitansi</label><input id="r_number" value="${nextReceiptNo()}"></div>
+        <div class="form-field"><label>Tanggal</label><input id="r_date" type="date" value="${todayStr()}"></div>
+      </div>
+      <div class="grid2">
+        <div class="form-field"><label>Diterima dari</label><input id="r_payer" placeholder="Nama pembayar / perusahaan"></div>
+        <div class="form-field"><label>Metode pembayaran</label>
+          <select id="r_method"><option>Tunai</option><option>Transfer Bank</option><option>QRIS</option><option>Cek / Giro</option></select></div>
+      </div>
+      <div class="form-field"><label>Untuk pembayaran</label><input id="r_for" placeholder="mis. Pelunasan tagihan bulan ini"></div>
+      <div class="li-total">
+        <div class="r grand"><span>Total Diterima</span><span class="mono" id="r_total">Rp 0</span></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" onclick="closeModal()">Batal</button>
+      <button class="btn gold" onclick="saveReceipt()">Terbitkan & Tandai Lunas</button>
+    </div>`);
+}
+let RSEL={};
+function onRcptPick(){
+  RSEL={}; let total=0, firstCust=null;
+  document.querySelectorAll("#r_invlist input:checked").forEach(cb=>{
+    RSEL[cb.value]=Number(cb.dataset.amt); total+=Number(cb.dataset.amt);
+    const inv=DB.invoices.find(x=>x.id===cb.value);
+    if(inv&&!firstCust)firstCust=inv.customerId;
+  });
+  $("#r_total").textContent=rp(total);
+  if(firstCust&&!$("#r_payer").value){ $("#r_payer").value=custName(firstCust); }
+}
+async function saveReceipt(){
+  const ids=Object.keys(RSEL);
+  if(!ids.length){ toast("Pilih minimal 1 invoice",true); return; }
+  const amount=Object.values(RSEL).reduce((a,b)=>a+b,0);
+  const firstInv=DB.invoices.find(x=>x.id===ids[0]);
+  const r={id:uid("rcpt-"),number:$("#r_number").value.trim(),date:$("#r_date").value,
+    payer:$("#r_payer").value.trim(),method:$("#r_method").value,forWhat:$("#r_for").value.trim(),
+    amount,invoiceIds:ids,customerId:firstInv?firstInv.customerId:""};
+  await api("saveReceipt",r); localFallback("saveReceipt",r);
+  closeModal(); toast("Kwitansi diterbitkan · invoice ditandai lunas"); go("receipts");
+}
+function nextReceiptNo(){
+  const y=new Date().getFullYear();
+  const seq=DB.receipts.length+1;
+  return `KW/${y}/${String(seq).padStart(4,"0")}`;
+}
+
+/* ================= PRINT: INVOICE ================= */
+function printInvoice(id){
+  const inv=DB.invoices.find(x=>x.id===id); if(!inv)return;
+  const c=DB.customers.find(x=>x.id===inv.customerId)||{};
+  const rows=inv.items.map((it,n)=>`<tr>
+    <td>${n+1}</td><td>${esc(it.name)}</td><td style="text-align:center">${it.qty} ${esc(it.unit||"")}</td>
+    <td class="num">${rp(it.price)}</td><td class="num">${rp(it.subtotal)}</td></tr>`).join("");
+  $("#printArea").innerHTML=`<div class="doc">
+    ${docHeader("Invoice",inv.number)}
+    <div class="doc-meta">
+      <div class="blk"><div class="lb">Ditagihkan kepada</div>
+        <div class="nm">${esc(c.name||"")}</div>${c.company?esc(c.company)+"<br>":""}${esc(c.address||"")}<br>${esc(c.phone||"")}</div>
+      <div class="blk" style="text-align:right"><div class="lb">Detail</div>
+        Tanggal: ${fmtDate(inv.date)}<br>Jatuh tempo: ${fmtDate(inv.due)}<br>Status: ${inv.status==="paid"?"LUNAS":"BELUM DIBAYAR"}</div>
+    </div>
+    <table><thead><tr><th>#</th><th>Deskripsi</th><th style="text-align:center">Qty</th><th class="num">Harga</th><th class="num">Jumlah</th></tr></thead>
+      <tbody>${rows}</tbody></table>
+    <div class="doc-sum"><div class="box">
+      <div class="r"><span>Subtotal</span><span class="mono">${rp(inv.subtotal)}</span></div>
+      <div class="r"><span>Pajak (${inv.taxPct||0}%)</span><span class="mono">${rp(inv.tax||0)}</span></div>
+      <div class="r grand"><span>Total</span><span class="mono">${rp(inv.total)}</span></div>
+    </div></div>
+    ${inv.notes?`<div class="doc-note"><strong>Catatan:</strong> ${esc(inv.notes)}</div>`:""}
+    <div class="doc-note">Pembayaran ditujukan ke ${esc(COMPANY.name)}. Terima kasih atas kepercayaan Anda.</div>
+  </div>`;
+  window.print();
+}
+
+/* ================= PRINT: RECEIPT (KWITANSI) ================= */
+function printReceipt(id){
+  const r=DB.receipts.find(x=>x.id===id); if(!r)return;
+  $("#printArea").innerHTML=`<div class="doc">
+    ${docHeader("Kwitansi",r.number)}
+    <div class="doc-meta">
+      <div class="blk"><div class="lb">Telah diterima dari</div><div class="nm">${esc(r.payer||custName(r.customerId))}</div></div>
+      <div class="blk" style="text-align:right"><div class="lb">Detail</div>
+        Tanggal: ${fmtDate(r.date)}<br>Metode: ${esc(r.method||"Tunai")}</div>
+    </div>
+    <div class="terbilang"><strong>Terbilang:</strong> ${terbilang(r.amount)} rupiah</div>
+    <div class="doc-sum"><div class="box">
+      <div class="r grand"><span>Jumlah diterima</span><span class="mono">${rp(r.amount)}</span></div>
+    </div></div>
+    ${r.forWhat?`<div class="doc-note"><strong>Untuk pembayaran:</strong> ${esc(r.forWhat)}</div>`:""}
+    <div class="doc-sign"><div class="s">${esc(COMPANY.addr.split(",")[0]||"")}, ${fmtDate(r.date)}<div class="line">${esc(COMPANY.name)}</div></div></div>
+  </div>`;
+  window.print();
+}
+
+function docHeader(title,no){
+  return `<div class="doc-top">
+    <div class="doc-brand"><div class="m">L</div>
+      <div><div class="t">${esc(COMPANY.name)}</div><div class="s">${esc(COMPANY.addr)} · ${esc(COMPANY.phone)}</div></div></div>
+    <div class="doc-title"><h2>${title}</h2><div class="no">${esc(no)}</div></div>
+  </div>`;
+}
+
+/* ================= TERBILANG (angka -> kata) ================= */
+function terbilang(n){
+  n=Math.floor(Math.abs(n));
+  if(n===0)return "nol";
+  const sat=["","satu","dua","tiga","empat","lima","enam","tujuh","delapan","sembilan","sepuluh","sebelas"];
+  function toWords(x){
+    if(x<12)return sat[x];
+    if(x<20)return toWords(x-10)+" belas";
+    if(x<100)return toWords(Math.floor(x/10))+" puluh"+(x%10?" "+toWords(x%10):"");
+    if(x<200)return "seratus"+(x%100?" "+toWords(x%100):"");
+    if(x<1000)return toWords(Math.floor(x/100))+" ratus"+(x%100?" "+toWords(x%100):"");
+    if(x<2000)return "seribu"+(x%1000?" "+toWords(x%1000):"");
+    if(x<1e6)return toWords(Math.floor(x/1000))+" ribu"+(x%1000?" "+toWords(x%1000):"");
+    if(x<1e9)return toWords(Math.floor(x/1e6))+" juta"+(x%1e6?" "+toWords(x%1e6):"");
+    if(x<1e12)return toWords(Math.floor(x/1e9))+" miliar"+(x%1e9?" "+toWords(x%1e9):"");
+    return toWords(Math.floor(x/1e12))+" triliun"+(x%1e12?" "+toWords(x%1e12):"");
+  }
+  const w=toWords(n).replace(/\s+/g," ").trim();
+  return w.charAt(0).toUpperCase()+w.slice(1);
+}
+
+/* ================= DELETE CONFIRM ================= */
+function confirmDelete(type,id){
+  const map={customer:["Pelanggan","deleteCustomer","customers"],product:["Barang","deleteProduct","products"],
+    invoice:["Invoice","deleteInvoice","invoices"],receipt:["Kwitansi","deleteReceipt","receipts"]};
+  const [label,action,coll]=map[type];
+  showModal(`
+    <div class="modal-head"><h3>Hapus ${label}?</h3><button class="x" onclick="closeModal()">×</button></div>
+    <div class="modal-body"><p style="color:var(--ink-soft);font-size:14px;line-height:1.6">
+      Data ${label.toLowerCase()} ini akan dihapus permanen${type==="receipt"?". Invoice terkait akan dikembalikan ke status belum dibayar.":"."} Tindakan ini tidak dapat dibatalkan.</p></div>
+    <div class="modal-foot"><button class="btn ghost" onclick="closeModal()">Batal</button>
+      <button class="btn danger" onclick="doDelete('${action}','${id}','${coll}')">Hapus</button></div>`);
+}
+async function doDelete(action,id,coll){
+  await api(action,{id}); localFallback(action,{id});
+  closeModal(); toast("Data dihapus"); go(CURRENT);
+}
+
+/* ================= HELPERS ================= */
+function custName(id){ const c=DB.customers.find(x=>x.id===id); return c?c.name:"(tanpa pelanggan)"; }
+function match(o,q,keys){ if(!q)return true; q=q.toLowerCase(); return keys.some(k=>(o[k]||"").toString().toLowerCase().includes(q)); }
+function statusBadge(s){ return s==="paid"?'<span class="badge paid">Lunas</span>':'<span class="badge unpaid">Belum bayar</span>'; }
+function showModal(html){ $("#modal").innerHTML=html; $("#overlay").classList.add("show"); }
+function closeModal(){ $("#overlay").classList.remove("show"); }
+$("#overlay").addEventListener("click",e=>{ if(e.target.id==="overlay")closeModal(); });
+function emptyBox(t,s){ return `<div class="empty">${docIcon()}<div style="font-weight:600;color:var(--ink-soft);margin-bottom:3px">${t}</div><div style="font-size:13px">${s}</div></div>`; }
+
+/* icons */
+function plusIcon(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>';}
+function editIcon(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>';}
+function trashIcon(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>';}
+function printIcon(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"/></svg>';}
+function searchIcon(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>';}
+function docIcon(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>';}
+
+/* ================= INIT ================= */
+(function init(){
+  const saved=sessionStorage.getItem("ledgerine_session");
+  if(saved){ SESSION=JSON.parse(saved); enterApp(); }
+})();
+</script>
+</body>
+</html>
